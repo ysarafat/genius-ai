@@ -6,14 +6,13 @@ import {
   ImageIcon,
   LayoutDashboard,
   MessageSquare,
-  MusicIcon,
   Settings,
-  VideoIcon,
 } from "lucide-react";
 import { Montserrat } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import FreeCounter from "./free-counter";
 const montserrat = Montserrat({ weight: "600", subsets: ["latin"] });
 const routes = [
   {
@@ -34,18 +33,18 @@ const routes = [
     href: "/image",
     color: "text-pink-700",
   },
-  {
-    label: "Video Generation",
-    icon: VideoIcon,
-    href: "/video",
-    color: "text-orange-700",
-  },
-  {
-    label: "Music Generation",
-    icon: MusicIcon,
-    href: "/music",
-    color: "text-emerald-500",
-  },
+  // {
+  //   label: "Video Generation",
+  //   icon: VideoIcon,
+  //   href: "/video",
+  //   color: "text-orange-700",
+  // },
+  // {
+  //   label: "Music Generation",
+  //   icon: MusicIcon,
+  //   href: "/music",
+  //   color: "text-emerald-500",
+  // },
   {
     label: "Code Generation",
     icon: Code,
@@ -59,7 +58,11 @@ const routes = [
     color: "text-gray-200",
   },
 ];
-const Sidebar = () => {
+
+interface SidebarProps {
+  apiLimitCount: number;
+}
+const Sidebar = ({ apiLimitCount }: SidebarProps) => {
   const pathname = usePathname();
   return (
     <div className="space-y-4 flex flex-col h-full bg-[#111827] text-white">
@@ -92,6 +95,7 @@ const Sidebar = () => {
           ))}
         </div>
       </div>
+      <FreeCounter apiLimitCount={apiLimitCount} />
     </div>
   );
 };
