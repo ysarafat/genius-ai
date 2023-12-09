@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import axios from "axios";
 import { Check, Code, ImageIcon, MessageSquare, Zap } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { Button } from "./ui/button";
 const tools = [
   {
@@ -56,7 +57,7 @@ const ProModal = () => {
       const response = axios.get("/api/stripe");
       window.location.href = (await response).data.url;
     } catch (error) {
-      console.log(error, "STRIPE_CLIENT_ERROR");
+      toast.error("Something went wrong!");
     } finally {
       setLoading(false);
     }

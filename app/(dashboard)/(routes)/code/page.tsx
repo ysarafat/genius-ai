@@ -15,6 +15,7 @@ import { Code } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import ReactMarkdown from "react-markdown";
 import * as z from "zod";
 import { formSchema } from "./constants";
@@ -45,6 +46,8 @@ const CodePage = () => {
     } catch (error: any) {
       if (error?.response?.status === 403) {
         proModal.onOpen();
+      } else {
+        toast.error("Something went wrong!");
       }
     } finally {
       router.refresh();
