@@ -1,4 +1,5 @@
 import { checkApiLimit, increaseApiLimit } from "@/lib/api-limit";
+import { checkSubscription } from "@/lib/subscription";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
@@ -28,8 +29,10 @@ export async function POST(req: Request) {
     if (!resolution) {
       return new NextResponse("Resolution are required", { status: 400 });
     }
+    const isPro = await checkSubscription();
+
     const freeTrial = await checkApiLimit();
-    if (!freeTrial) {
+    if (!freeTrial && !isPro) {
       return new NextResponse("Free trail has expired", { status: 403 });
     }
     const response = await openai.images.generate({
@@ -37,7 +40,9 @@ export async function POST(req: Request) {
       n: parseInt(amount, 10),
       size: resolution,
     });
-    await increaseApiLimit();
+    if (!isPro) {
+      await increaseApiLimit();
+    }
     return NextResponse.json(response?.data);
   } catch (error) {
     console.log("[IMAGE_ERROR]", error);

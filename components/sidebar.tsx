@@ -6,7 +6,7 @@ import {
   ImageIcon,
   LayoutDashboard,
   MessageSquare,
-  Settings,
+  Settings2,
 } from "lucide-react";
 import { Montserrat } from "next/font/google";
 import Image from "next/image";
@@ -53,7 +53,7 @@ const routes = [
   },
   {
     label: "Settings",
-    icon: Settings,
+    icon: Settings2,
     href: "/settings",
     color: "text-gray-200",
   },
@@ -61,8 +61,9 @@ const routes = [
 
 interface SidebarProps {
   apiLimitCount: number;
+  isPro: boolean;
 }
-const Sidebar = ({ apiLimitCount }: SidebarProps) => {
+const Sidebar = ({ apiLimitCount, isPro = false }: SidebarProps) => {
   const pathname = usePathname();
   return (
     <div className="space-y-4 flex flex-col h-full bg-[#111827] text-white">
@@ -95,7 +96,7 @@ const Sidebar = ({ apiLimitCount }: SidebarProps) => {
           ))}
         </div>
       </div>
-      <FreeCounter apiLimitCount={apiLimitCount} />
+      <FreeCounter apiLimitCount={apiLimitCount} isPro={isPro} />
     </div>
   );
 };
