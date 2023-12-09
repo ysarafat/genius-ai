@@ -12,14 +12,17 @@ import BotAvatar from "@/components/bot-avatar";
 import Empty from "@/components/empty";
 import Loading from "@/components/loading";
 import UserAvatar from "@/components/user-avatar";
+import { useProModal } from "@/hooks/use-pro-modal";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { formSchema } from "./constants";
 const ConversationPage = () => {
+  const proModal = useProModal();
   const [messages, setMessage] = useState<any[]>([]);
   const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,7 +44,9 @@ const ConversationPage = () => {
       setMessage((current) => [...current, userMessage, response?.data]);
       form.reset();
     } catch (error: any) {
-      console.log(error);
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }

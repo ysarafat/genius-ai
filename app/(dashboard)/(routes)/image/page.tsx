@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useProModal } from "@/hooks/use-pro-modal";
 import axios from "axios";
 import Image from "next/image";
 import { useState } from "react";
@@ -24,8 +25,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { amountOptions, formSchema, resolutionOption } from "./constants";
 const ImagePage = () => {
+  const proModal = useProModal();
   const [images, setImages] = useState<string[]>([]);
-
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,7 +46,9 @@ const ImagePage = () => {
       setImages(urls);
       form.reset();
     } catch (error: any) {
-      console.log(error);
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }

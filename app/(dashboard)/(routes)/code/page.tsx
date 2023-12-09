@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import UserAvatar from "@/components/user-avatar";
+import { useProModal } from "@/hooks/use-pro-modal";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -18,6 +19,7 @@ import ReactMarkdown from "react-markdown";
 import * as z from "zod";
 import { formSchema } from "./constants";
 const CodePage = () => {
+  const proModal = useProModal();
   const [messages, setMessage] = useState<any[]>([]);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -41,7 +43,9 @@ const CodePage = () => {
       setMessage((current) => [...current, userMessage, response?.data]);
       form.reset();
     } catch (error: any) {
-      console.log(error);
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }
